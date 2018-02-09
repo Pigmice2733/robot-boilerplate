@@ -55,9 +55,9 @@ class Robot(MagicRobot):
         super().autonomous()
 
     def teleopPeriodic(self):
-        self.drivetrain.turn_at(
-            self.drive_joystick.getRawAxis(0), squaredInputs=True)
-        self.drivetrain.forward_at(-self.drive_joystick.getRawAxis(1))
+        self.drivetrain.set_left_speed(self.drive_joystick.getY())
+        self.drivetrain.set_right_speed(self.operator_joystick.getY())
+
         if self.operator_joystick.getRawButton(10):
             self.climber.climb()
 

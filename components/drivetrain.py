@@ -14,8 +14,10 @@ from utils import NetworkTablesSender
 
 class Drivetrain:
     robot_drive = drive.DifferentialDrive
-    rotation = 0
-    forward = 0
+    rotation = False
+    forward = False
+    left_speed = False
+    right_speed = False
     curvature = 0
     robot_characteristics = RobotCharacteristics(
         acceleration_time=0.8,
@@ -43,6 +45,12 @@ class Drivetrain:
         self.rotation = speed
         if squaredInputs:
             self.rotation = math.copysign(speed**2, speed)
+
+    def set_left_speed(self, speed):
+        self.left_speed = speed
+
+    def set_right_speed(self, speed):
+        self.right_speed = speed
 
     def curve_at(self, curvature):
         self.curvature = curvature
@@ -118,9 +126,16 @@ class Drivetrain:
             self.robot_drive.tankDrive(
                 v_left, v_right, squaredInputs=False)
         else:
-            self.robot_drive.arcadeDrive(
-                self.forward, self.rotation, squaredInputs=False)
+            print(self.left_speed, self.right_speed)
+            if self.left_speed is not False and self.right_speed is not False:
+                self.robot_drive.tankDrive(
+                    self.left_speed, self.right_speed, squaredInputs=False)
+            else:
+                self.robot_drive.arcadeDrive(
+                    self.forward, self.rotation, squaredInputs=False)
 
-        self.rotation = 0
-        self.forward = 0
+        self.rotation = False
+        self.forward = False
+        self.left_speed = False
+        self.right_speed = False
         self.curvature = None
